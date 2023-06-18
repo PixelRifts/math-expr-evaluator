@@ -1,0 +1,89 @@
+version(1);
+
+project_name = "Codebase";
+
+patterns = {
+	"*.c",
+	"*.cpp",
+	"*.mdesk",
+	"*.h",
+	"*.bat",
+	"*.sh",
+	"*.4coder",
+	"*.txt",
+	"*.glsl",
+};
+
+blacklist_patterns = {
+	".*",
+};
+
+load_paths_custom = {
+	{ "./source" },
+	{ "./third_party/include/KHR" },
+	{ "./third_party/include/md" },
+	{ "./third_party/include/stb" },
+	{ "./third_party/source" },
+  { "./third_party/include/al" },
+	{ "./", .recursive = false },
+};
+
+load_paths = {
+	{ load_paths_custom, .os = "win"  },
+	{ load_paths_custom, .os = "linux"  },
+};
+
+command_list = {
+	{
+		.name = "build",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = false,
+		.cmd =
+		{
+			{ "build.bat", .os = "win" },
+			{ "./build.sh", .os = "linux" },
+		},
+	},
+	{
+		.name = "run",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = true,
+		.cmd =
+		{
+			{ "bin\chip8.exe roms/chip8-test-rom-with-audio.c8", .os = "win" },
+			{ "bin/codebase roms/glitchGhost.c8", .os = "linux" },
+		},
+	},
+	{
+		.name = "run-metaprograms",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = false,
+		.cmd =
+		{
+			{ "meta.bat", .os = "win" },
+			{ "./meta.sh", .os = "linux" },
+		},
+	},
+	{
+		.name = "build-base",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.save_dirty_files = true,
+		.cursor_at_end = false,
+		.cmd =
+		{
+			{ "build_base.bat", .os = "win" },
+		},
+	},
+};
+
+fkey_command[1] = "build";
+fkey_command[2] = "run";
+fkey_command[3] = "run-metaprograms";
+fkey_command[4] = "build-base";

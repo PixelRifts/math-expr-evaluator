@@ -35,7 +35,8 @@ enum {
   Precedence_MIN,
   
   Precedence_Term,
-  Precedence_Factor,
+  Precedence_Mult,
+  Precedence_Div,
   Precedence_Power,
   
   Precedence_MAX,

@@ -4,8 +4,8 @@
 static Precedence precedence_lookup[TokenType_MAX] = {
   [TokenType_Plus]  = Precedence_Term,
   [TokenType_Minus] = Precedence_Term,
-  [TokenType_Star]  = Precedence_Factor,
-  [TokenType_Slash] = Precedence_Factor,
+  [TokenType_Star]  = Precedence_Mult,
+  [TokenType_Slash] = Precedence_Div,
   [TokenType_Caret] = Precedence_Power,
 };
 
@@ -26,17 +26,6 @@ static Expression_Node* parser_parse_number(Parser* parser) {
   ret->type = NodeType_Number;
   ret->number = value;
   return ret;
-}
-
-static Expression_Node* parser_parse_prefix_expr(Parser* parser);
-static Expression_Node* parser_power_tower(Parser* parser, Expression_Node* node) {
-  if (parser->curr.type != TokenType_Caret) return node;
-  parser_advance(parser);
-  Expression_Node* power_node = pool_alloc(&parser->node_pool);
-  power_node->type = NodeType_Pow;
-  power_node->binary.left = node;
-  power_node->binary.right = parser_parse_prefix_expr(parser);
-  return parser_power_tower(parser, power_node);
 }
 
 static Expression_Node* parser_parse_prefix_expr(Parser* parser) {
@@ -73,8 +62,7 @@ static Expression_Node* parser_parse_prefix_expr(Parser* parser) {
     Expression_Node* new_ret = pool_alloc(&parser->node_pool);
     new_ret->type = NodeType_Mul;
     new_ret->binary.left = ret;
-    new_ret->binary.right = parser_parse_prefix_expr(parser);
-    new_ret->binary.right = parser_power_tower(parser, new_ret->binary.right);
+    new_ret->binary.right = parser_parse_expression(parser, Precedence_Div);
     ret = new_ret;
   }
   

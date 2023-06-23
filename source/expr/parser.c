@@ -106,20 +106,16 @@ Expression_Node* parser_parse_expression(Parser* parser, Precedence curr_operato
   Token next_operator = parser->curr;
   Precedence next_operator_prec = precedence_lookup[parser->curr.type];
   
-  if (curr_operator_prec <= next_operator_prec
-      && next_operator_prec != Precedence_MIN) parser_advance(parser);
-  
   while (next_operator_prec != Precedence_MIN) {
     
-    if (curr_operator_prec > next_operator_prec) {
+    if (curr_operator_prec >= next_operator_prec) {
       break;
-    } else /* (curr_operator_prec <= next_operator_prec) */ {
+    } else /* (curr_operator_prec < next_operator_prec) */ {
+      parser_advance(parser); // Advance the operator
       
       left = parser_parse_infix_expr(parser, next_operator, left);
       next_operator = parser->curr;
       next_operator_prec = precedence_lookup[parser->curr.type];
-      
-      if (next_operator_prec != Precedence_MIN) parser_advance(parser);
     }
   }
   

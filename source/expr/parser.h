@@ -51,7 +51,7 @@ typedef struct Parser {
 } Parser;
 
 void             parser_init(Parser* parser, string expression);
-Expression_Node* parser_parse_expression(Parser* parser, Precedence prec);
+Expression_Node* parser_parse_expression(Parser* parser, Precedence curr_operator_prec);
 void             parser_free(Parser* parser);
 
 void parser_debug_dump_tree(Expression_Node* node, u32 indent);
